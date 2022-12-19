@@ -23,11 +23,13 @@ class KARTRIDER_API AVehiclePlayer : public AWheeledVehiclePawn
 public:
 	AVehiclePlayer();
 
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 	// Input Actions
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Actions")
 	UInputAction* ThrottleAction;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Input Actions")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category ="Input Actions")
 	UInputAction* SteeringAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Actions")
@@ -58,7 +60,11 @@ private:
 	UCameraComponent* VehicleCameraComponent;
 
 	// Input Functions
-	void EnhancedThrottle(const FInputActionValue Value);
-	void EnhancedSteering(const FInputActionValue Value);
-	void EnhancedBreak(const FInputActionValue Value);
+	void EnhancedThrottle(const FInputActionValue& Value);
+
+	void EnhancedSteering(const FInputActionValue& Value);
+
+	void EnhancedBreak(const FInputActionValue& Value);
+
+	void EnhancedDrift(const FInputActionValue& Value);
 };

@@ -20,7 +20,7 @@ AVehiclePlayer::AVehiclePlayer()
 
 }
 
-void AVehiclePlayer::EnhancedThrottle(const FInputActionValue Value) {
+void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
 	if (Value.GetMagnitude() != 0.0f)
 	{
 		GetVehicleMovement()->SetThrottleInput(Value.GetMagnitude());
