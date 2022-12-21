@@ -55,7 +55,7 @@ public:
 	int32 BaseMappingPrioirty = 0;
 
 	UPROPERTY(EditAnywhere, Category="Input")
-	TSoftObjectPtr<UInputMappingContext> InputMapping;
+	class UInputMappingContext* InputMapping;
 
 private:
 	UPROPERTY(EditAnywhere, Category="Vehicle Player")

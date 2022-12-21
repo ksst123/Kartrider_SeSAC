@@ -3,6 +3,9 @@
 
 #include "VehiclePlayer.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/LocalPlayer.h"
+#include "GameFramework/PlayerController.h"
 
 
 AVehiclePlayer::AVehiclePlayer()
@@ -38,6 +41,11 @@ void AVehiclePlayer::BeginPlay() {
 			}
 		}
 	}*/
+
+	// ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
+	APlayerController* con = Cast<APlayerController>(Controller);
+	UEnhancedInputLocalPlayerSubsystem* subsys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(con->GetLocalPlayer());
+	subsys->AddMappingContext(InputMapping, 0);
 
 }
 
@@ -79,7 +87,7 @@ void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
 	if (Value.GetMagnitude() != 0.0f)
 	{
 		// GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
-		GetVehicleMovementComponent()->SetThrottleInput(1);
+		GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
 	}
 }
 
