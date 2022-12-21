@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "ChaosVehicleMovementComponent.h"
+#include "EnhancedInputComponent.h"
 
 #include "VehiclePlayer.generated.h"
 
@@ -23,7 +24,11 @@ class KARTRIDER_API AVehiclePlayer : public AWheeledVehiclePawn
 public:
 	AVehiclePlayer();
 
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	void BeginPlay();
+
+	void Tick(float DeltaTime);
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Input Actions
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Actions")
@@ -49,14 +54,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
 	int32 BaseMappingPrioirty = 0;
 
+	UPROPERTY(EditAnywhere, Category="Input")
+	TSoftObjectPtr<UInputMappingContext> InputMapping;
+
 private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category="Vehicle Player")
 	USkeletalMeshComponent* VehicleMeshComponent;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Vehicle Player")
 	USpringArmComponent* VehicleSpringArmComponent;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Vehicle Player")
 	UCameraComponent* VehicleCameraComponent;
 
 	// Input Functions
@@ -67,4 +75,6 @@ private:
 	void EnhancedBreak(const FInputActionValue& Value);
 
 	void EnhancedDrift(const FInputActionValue& Value);
+
+	void EnhancedReset(const FInputActionValue& Value);
 };
