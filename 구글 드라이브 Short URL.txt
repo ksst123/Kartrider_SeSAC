@@ -4,3 +4,5 @@ shorturl.at/juyDM
 https://docs.unrealengine.com/4.27/en-US/API/Classes/
 https://dev.epicgames.com/community/learning/tutorials/aqrD/unreal-engine-enhanced-input-binding-with-gameplay-tags-c
 https://docs.unrealengine.com/5.1/en-US/enhanced-input-in-unreal-engine/
+
+https://forums.unrealengine.com/t/car-boosting-nitro/634408/4

@@ -24,6 +24,8 @@ AVehiclePlayer::AVehiclePlayer()
 	VehicleCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("VehicleCameraComponent"));
 	VehicleCameraComponent->SetupAttachment(VehicleSpringArmComponent);
 
+	// ThrottleAction->
+
 	// GetVehicleMovementComponent()->SetupVehicleMass()
 }
 
@@ -45,7 +47,7 @@ void AVehiclePlayer::BeginPlay() {
 	// ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
 	APlayerController* con = Cast<APlayerController>(Controller);
 	UEnhancedInputLocalPlayerSubsystem* subsys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(con->GetLocalPlayer());
-	subsys->AddMappingContext(InputMapping, 0);
+	subsys->AddMappingContext(BaseMappingContext, 0);
 
 }
 
@@ -92,6 +94,10 @@ void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
 }
 
 void AVehiclePlayer::EnhancedSteering(const FInputActionValue& Value) {
+	if (Value.GetMagnitude() != 0.0f)
+	{
+		GetVehicleMovementComponent()->SetSteeringInput(Value.GetMagnitude());
+	}
 }
 
 void AVehiclePlayer::EnhancedBreak(const FInputActionValue& Value) {

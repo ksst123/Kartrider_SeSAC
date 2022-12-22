@@ -49,13 +49,13 @@ public:
 
 	// Input Mappings
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
-	UInputMappingContext* BaseMappingContext;
+	class UInputMappingContext* BaseMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
 	int32 BaseMappingPrioirty = 0;
 
-	UPROPERTY(EditAnywhere, Category="Input")
-	class UInputMappingContext* InputMapping;
+	/*UPROPERTY(EditAnywhere, Category="Input")
+	class UInputMappingContext* InputMapping;*/
 
 private:
 	UPROPERTY(EditAnywhere, Category="Vehicle Player")
