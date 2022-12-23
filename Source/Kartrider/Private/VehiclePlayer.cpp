@@ -13,8 +13,8 @@ AVehiclePlayer::AVehiclePlayer()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 자동차를 위한 스켈레탈 메시 컴포넌트 생성 후 루트 컴포넌트로 설정
-	VehicleMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VehicleMeshComponent"));
-	RootComponent = VehicleMeshComponent;
+	/*VehicleMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VehicleMeshComponent"));
+	RootComponent = VehicleMeshComponent;*/
 	
 	// 스프링 암 컴포넌트 생성 후 루트 컴포넌트에 붙인다.
 	VehicleSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("VehicleSpringArmComponent"));
@@ -86,18 +86,11 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 }
 
 void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
-	if (Value.GetMagnitude() != 0.0f)
-	{
-		// GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
 		GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
-	}
 }
 
 void AVehiclePlayer::EnhancedSteering(const FInputActionValue& Value) {
-	if (Value.GetMagnitude() != 0.0f)
-	{
 		GetVehicleMovementComponent()->SetSteeringInput(Value.GetMagnitude());
-	}
 }
 
 void AVehiclePlayer::EnhancedBreak(const FInputActionValue& Value) {

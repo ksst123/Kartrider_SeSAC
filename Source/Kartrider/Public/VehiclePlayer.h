@@ -58,8 +58,8 @@ public:
 	class UInputMappingContext* InputMapping;*/
 
 private:
-	UPROPERTY(EditAnywhere, Category="Vehicle Player")
-	USkeletalMeshComponent* VehicleMeshComponent;
+	/*UPROPERTY(EditAnywhere, Category="Vehicle Player")
+	USkeletalMeshComponent* VehicleMeshComponent;*/
 
 	UPROPERTY(EditAnywhere, Category = "Vehicle Player")
 	USpringArmComponent* VehicleSpringArmComponent;
