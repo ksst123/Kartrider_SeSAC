@@ -8,6 +8,10 @@
 #include "GameFramework/PlayerController.h"
 
 
+
+
+
+
 AVehiclePlayer::AVehiclePlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -20,9 +24,16 @@ AVehiclePlayer::AVehiclePlayer()
 	VehicleSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("VehicleSpringArmComponent"));
 	VehicleSpringArmComponent->SetupAttachment(RootComponent);
 
-	// 카메라 컴포넌트 생성 후 스프링 암 컴포넌트에 붙인다;
+	// 카메라 컴포넌트 생성 후 스프링 암 컴포넌트에 붙인다.
 	VehicleCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("VehicleCameraComponent"));
 	VehicleCameraComponent->SetupAttachment(VehicleSpringArmComponent);
+
+	// 캡쳐 카메라를 위한 스프링 암 컴포넌트 생성 후 루트 컴포넌트에 붙인다.
+	SceneCaptureSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SceneCaptureSpringArmComponent"));
+	SceneCaptureSpringArmComponent->SetupAttachment(RootComponent);
+
+	SceneCaptureCameraComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureCameraComponent"));
+	SceneCaptureCameraComponent->SetupAttachment(SceneCaptureSpringArmComponent);
 
 	// ThrottleAction->
 
@@ -86,15 +97,18 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 }
 
 void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
-		GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
+	GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
+	// GetVehicleMovementComponent()->SetThrottleInput(Value.Get<float>());
 }
 
 void AVehiclePlayer::EnhancedSteering(const FInputActionValue& Value) {
-		GetVehicleMovementComponent()->SetSteeringInput(Value.GetMagnitude());
+	GetVehicleMovementComponent()->SetSteeringInput(Value.GetMagnitude());
+
 }
 
 void AVehiclePlayer::EnhancedBreak(const FInputActionValue& Value) {
 	GetVehicleMovementComponent()->SetBrakeInput(Value.GetMagnitude());
+
 }
 
 void AVehiclePlayer::EnhancedDrift(const FInputActionValue& Value) {

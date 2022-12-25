@@ -6,6 +6,7 @@
 #include "WheeledVehiclePawn.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "ChaosVehicleMovementComponent.h"
@@ -49,7 +50,7 @@ public:
 
 	// Input Mappings
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
-	class UInputMappingContext* BaseMappingContext;
+	UInputMappingContext* BaseMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
 	int32 BaseMappingPrioirty = 0;
@@ -57,15 +58,21 @@ public:
 	/*UPROPERTY(EditAnywhere, Category="Input")
 	class UInputMappingContext* InputMapping;*/
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
+	USpringArmComponent* VehicleSpringArmComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
+	UCameraComponent* VehicleCameraComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
+	USpringArmComponent* SceneCaptureSpringArmComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
+	USceneCaptureComponent2D* SceneCaptureCameraComponent;
+
 private:
 	/*UPROPERTY(EditAnywhere, Category="Vehicle Player")
 	USkeletalMeshComponent* VehicleMeshComponent;*/
-
-	UPROPERTY(EditAnywhere, Category = "Vehicle Player")
-	USpringArmComponent* VehicleSpringArmComponent;
-
-	UPROPERTY(EditAnywhere, Category = "Vehicle Player")
-	UCameraComponent* VehicleCameraComponent;
 
 	// Input Functions
 	void EnhancedThrottle(const FInputActionValue& Value);
