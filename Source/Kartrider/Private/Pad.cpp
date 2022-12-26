@@ -4,6 +4,7 @@
 #include "Pad.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "LaunchPad.generated.h"
 
 // Sets default values
 APad::APad()
@@ -19,6 +20,14 @@ APad::APad()
 	StaticMesh->SetupAttachment(RootComponent);
 
 }
+
+void ALaunchPad::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character Launched!"));
+	Asgd240_1115350_core5Character::LaunchCharacter(FVector(0, 0, velocity), false, true);
+
+}
+
 
 // Called when the game starts or when spawned
 void APad::BeginPlay()
