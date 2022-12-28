@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Actions")
 	UInputAction* ResetAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Actions")
+	UInputAction* BoosterAction;
+
 
 	// Input Mappings
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input Mappings")
@@ -83,5 +86,11 @@ private:
 
 	void EnhancedDrift(const FInputActionValue& Value);
 
-	void EnhancedReset(const FInputActionValue& Value);
+	void EnhancedReset();
+
+	void EnhancedBooster();
+
+	FVector direction;
+	float BoosterSpeed = 3000.0f;
+	float DriftForce;
 };

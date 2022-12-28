@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/PlayerController.h"
+// #include "ChaosVehicleWheel.h"
 
 
 
@@ -87,34 +88,49 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	// 드리프트 액션 바인딩
 	Input->BindAction(DriftAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedDrift);
-	Input->BindAction(DriftAction, ETriggerEvent::Started, this, &AVehiclePlayer::EnhancedBreak);
-	Input->BindAction(DriftAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBreak);
+	Input->BindAction(DriftAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedDrift);
 
 	// 리셋 액션 바인딩
 	Input->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedReset);
 	
+	// 부스터 액션 바인딩
+	Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
 
 }
 
 void AVehiclePlayer::EnhancedThrottle(const FInputActionValue& Value) {
+	
 	GetVehicleMovementComponent()->SetThrottleInput(Value.GetMagnitude());
 	// GetVehicleMovementComponent()->SetThrottleInput(Value.Get<float>());
 }
 
 void AVehiclePlayer::EnhancedSteering(const FInputActionValue& Value) {
+	
 	GetVehicleMovementComponent()->SetSteeringInput(Value.GetMagnitude());
-
 }
 
 void AVehiclePlayer::EnhancedBreak(const FInputActionValue& Value) {
+	
 	GetVehicleMovementComponent()->SetBrakeInput(Value.GetMagnitude());
-
+	// UVehicleWheelComponent* VehicleWheel = CreateDefaultSubobject<UVehicleWheelComponent>(TEXT("WheelComponent"));
 }
 
 void AVehiclePlayer::EnhancedDrift(const FInputActionValue& Value) {
 
+	/*FVector DriftImpulse = FVector::CrossProduct(GetActorUpVector(), GetActorForwardVector()) * DriftForce * Value.GetMagnitude();
+	GetMesh()->AddImpulseAtLocation(DriftImpulse, GetActorLocation());*/
+
+	GetVehicleMovementComponent()->SetHandbrakeInput(Value.Get<bool>());
 }
 
-void AVehiclePlayer::EnhancedReset(const FInputActionValue& Value) {
+void AVehiclePlayer::EnhancedReset() {
 
+}
+
+void AVehiclePlayer::EnhancedBooster() {
+
+	direction = GetActorForwardVector();
+	// direction.Normalize();
+	FVector BoosterVelocity = direction * BoosterSpeed;
+	GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity);
 }
