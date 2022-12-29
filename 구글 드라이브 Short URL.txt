@@ -14,3 +14,5 @@ https://www.youtube.com/watch?v=Wc6lUXOhRO0
 https://www.youtube.com/watch?v=vYaHl5bf4ww
 
 https://www.oreilly.com/library/view/unreal-engine-5/9781804615379/video3_1.html
+
+thruster component

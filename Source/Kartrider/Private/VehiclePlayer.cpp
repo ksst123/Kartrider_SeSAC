@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/PlayerController.h"
-// #include "ChaosVehicleWheel.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
 
 
 
@@ -35,6 +35,28 @@ AVehiclePlayer::AVehiclePlayer()
 
 	SceneCaptureCameraComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureCameraComponent"));
 	SceneCaptureCameraComponent->SetupAttachment(SceneCaptureSpringArmComponent);
+
+	// 부스터를 위한 오른쪽 Thruster 생성 후 루트 컴포넌트에 붙인다.
+	RightThruster = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("RightBoosterThruster"));
+	RightThruster->SetupAttachment(RootComponent);
+	RightThruster->SetAutoActivate(false);
+
+	// 부스터를 위한 왼쪽 Thruster 생성 후 루트 컴포넌트에 붙인다.
+	LeftThruster = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("LeftBoosterThruster"));
+	LeftThruster->SetupAttachment(RootComponent);
+	LeftThruster->SetAutoActivate(false);
+
+	// 부스터 효과를 위한 오른쪽 Point Light 생성 후 오른쪽 Thruster에 붙인다.
+	RightBoosterLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("RightBoosterLight"));
+	RightBoosterLight->SetupAttachment(RightThruster);
+	RightBoosterLight->ToggleVisibility(false);
+	RightBoosterLight->SetCastShadows(false);
+
+	// 부스터 효과를 위한 왼쪽 Point Light 생성 후 왼쪽 Thruster에 붙인다.
+	LeftBoosterLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("LeftBoosterLight"));
+	LeftBoosterLight->SetupAttachment(LeftThruster);
+	LeftBoosterLight->ToggleVisibility(false);
+	LeftBoosterLight->SetCastShadows(false);
 
 	// ThrottleAction->
 
@@ -88,13 +110,16 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	// 드리프트 액션 바인딩
 	Input->BindAction(DriftAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedDrift);
-	Input->BindAction(DriftAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedDrift);
+	Input->BindAction(DriftAction, ETriggerEvent::Started, this, &AVehiclePlayer::EnhancedDrift);
+	Input->BindAction(DriftAction, ETriggerEvent::Ongoing, this, &AVehiclePlayer::EnhancedDrift);
+	Input->BindAction(DriftAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedDriftCompleted);
 
 	// 리셋 액션 바인딩
 	Input->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedReset);
 	
 	// 부스터 액션 바인딩
 	Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
+	// Input->BindAction(BoosterAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBoosterCompleted);
 
 }
 
@@ -115,12 +140,31 @@ void AVehiclePlayer::EnhancedBreak(const FInputActionValue& Value) {
 	// UVehicleWheelComponent* VehicleWheel = CreateDefaultSubobject<UVehicleWheelComponent>(TEXT("WheelComponent"));
 }
 
-void AVehiclePlayer::EnhancedDrift(const FInputActionValue& Value) {
+void AVehiclePlayer::EnhancedDrift() {
 
 	/*FVector DriftImpulse = FVector::CrossProduct(GetActorUpVector(), GetActorForwardVector()) * DriftForce * Value.GetMagnitude();
 	GetMesh()->AddImpulseAtLocation(DriftImpulse, GetActorLocation());*/
 
-	GetVehicleMovementComponent()->SetHandbrakeInput(Value.Get<bool>());
+	// GetVehicleMovementComponent()->SetHandbrakeInput(Value.Get<bool>());
+
+	// GetVehicleMovementComponent()->
+
+	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
+	if (WheelComponent != nullptr)
+	{
+		WheelComponent->SetWheelFrictionMultiplier(0, 0.5);
+		WheelComponent->SetWheelFrictionMultiplier(1, 0.5);
+	}
+}
+
+void AVehiclePlayer::EnhancedDriftCompleted() {
+
+	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
+	if (WheelComponent != nullptr)
+	{
+		WheelComponent->SetWheelFrictionMultiplier(0, 2);
+		WheelComponent->SetWheelFrictionMultiplier(1, 2);
+	}
 }
 
 void AVehiclePlayer::EnhancedReset() {
@@ -129,8 +173,25 @@ void AVehiclePlayer::EnhancedReset() {
 
 void AVehiclePlayer::EnhancedBooster() {
 
-	direction = GetActorForwardVector();
-	// direction.Normalize();
-	FVector BoosterVelocity = direction * BoosterSpeed;
+	/*direction = GetActorForwardVector();
+	direction.Normalize();
+	OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
+	FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
 	GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity);
+	OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();*/
+
+	RightThruster->SetAutoActivate(true);
+	LeftThruster->SetAutoActivate(true);
+	RightBoosterLight->ToggleVisibility(true);
+	LeftBoosterLight->ToggleVisibility(true);
 }
+
+
+
+//void AVehiclePlayer::EnhancedBoosterCompleted() {
+//
+//	 RightThruster->SetAutoActivate(false);
+//	 LeftThruster->SetAutoActivate(false);
+//	RightBoosterLight->ToggleVisibility(false);
+//	LeftBoosterLight->ToggleVisibility(false);
+//}

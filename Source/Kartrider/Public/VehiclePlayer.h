@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "ChaosVehicleMovementComponent.h"
 #include "EnhancedInputComponent.h"
+#include "PhysicsEngine/PhysicsThrusterComponent.h"
+#include "Components/PointLightComponent.h"
 
 #include "VehiclePlayer.generated.h"
 
@@ -70,8 +72,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
 	USpringArmComponent* SceneCaptureSpringArmComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle Player")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
 	USceneCaptureComponent2D* SceneCaptureCameraComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
+	UPhysicsThrusterComponent* RightThruster;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
+	UPhysicsThrusterComponent* LeftThruster;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
+	UPointLightComponent* RightBoosterLight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
+	UPointLightComponent* LeftBoosterLight;
 
 private:
 	/*UPROPERTY(EditAnywhere, Category="Vehicle Player")
@@ -84,13 +98,16 @@ private:
 
 	void EnhancedBreak(const FInputActionValue& Value);
 
-	void EnhancedDrift(const FInputActionValue& Value);
+	void EnhancedDrift();
+	void EnhancedDriftCompleted();
 
 	void EnhancedReset();
 
 	void EnhancedBooster();
 
+
 	FVector direction;
-	float BoosterSpeed = 3000.0f;
+	float BoosterMultiplier = 1.08f;
 	float DriftForce;
+	float OriginVelocity;
 };
