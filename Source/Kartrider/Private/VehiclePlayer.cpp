@@ -152,8 +152,10 @@ void AVehiclePlayer::EnhancedDrift() {
 	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
 	if (WheelComponent != nullptr)
 	{
-		WheelComponent->SetWheelFrictionMultiplier(0, 0.5);
-		WheelComponent->SetWheelFrictionMultiplier(1, 0.5);
+		WheelComponent->SetWheelFrictionMultiplier(0, 0.8);
+		WheelComponent->SetWheelFrictionMultiplier(1, 0.8);
+		WheelComponent->SetWheelFrictionMultiplier(2, 0.8);
+		WheelComponent->SetWheelFrictionMultiplier(3, 0.8);
 	}
 }
 
@@ -162,8 +164,10 @@ void AVehiclePlayer::EnhancedDriftCompleted() {
 	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
 	if (WheelComponent != nullptr)
 	{
-		WheelComponent->SetWheelFrictionMultiplier(0, 2);
-		WheelComponent->SetWheelFrictionMultiplier(1, 2);
+		WheelComponent->SetWheelFrictionMultiplier(0, 3);
+		WheelComponent->SetWheelFrictionMultiplier(1, 3);
+		WheelComponent->SetWheelFrictionMultiplier(2, 3);
+		WheelComponent->SetWheelFrictionMultiplier(3, 3);
 	}
 }
 
