@@ -61,6 +61,7 @@ AVehiclePlayer::AVehiclePlayer()
 	// ThrottleAction->
 
 	// GetVehicleMovementComponent()->SetupVehicleMass()
+
 }
 
 void AVehiclePlayer::BeginPlay() {
@@ -152,10 +153,18 @@ void AVehiclePlayer::EnhancedDrift() {
 	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
 	if (WheelComponent != nullptr)
 	{
-		WheelComponent->SetWheelFrictionMultiplier(0, 0.8);
+		/*WheelComponent->SetWheelFrictionMultiplier(0, 0.8);
 		WheelComponent->SetWheelFrictionMultiplier(1, 0.8);
-		WheelComponent->SetWheelFrictionMultiplier(2, 0.8);
-		WheelComponent->SetWheelFrictionMultiplier(3, 0.8);
+		WheelComponent->SetWheelFrictionMultiplier(2, 1.5);
+		WheelComponent->SetWheelFrictionMultiplier(3, 1.5);
+
+		WheelComponent->SetWheelSlipGraphMultiplier(0, 10);
+		WheelComponent->SetWheelSlipGraphMultiplier(1, 10);
+		WheelComponent->SetWheelSlipGraphMultiplier(2, 12);
+		WheelComponent->SetWheelSlipGraphMultiplier(3, 12);*/
+
+		/*FVector DriftValue = FVector::CrossProduct(GetActorUpVector(), GetActorForwardVector()) * 10000;
+		GetMesh()->AddImpulse(DriftValue);*/
 	}
 }
 
@@ -164,10 +173,15 @@ void AVehiclePlayer::EnhancedDriftCompleted() {
 	UChaosWheeledVehicleMovementComponent* WheelComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
 	if (WheelComponent != nullptr)
 	{
-		WheelComponent->SetWheelFrictionMultiplier(0, 3);
-		WheelComponent->SetWheelFrictionMultiplier(1, 3);
-		WheelComponent->SetWheelFrictionMultiplier(2, 3);
-		WheelComponent->SetWheelFrictionMultiplier(3, 3);
+		/*WheelComponent->SetWheelFrictionMultiplier(0, 1);
+		WheelComponent->SetWheelFrictionMultiplier(1, 1);
+		WheelComponent->SetWheelFrictionMultiplier(2, 2);
+		WheelComponent->SetWheelFrictionMultiplier(3, 2);
+
+		WheelComponent->SetWheelSlipGraphMultiplier(0, 1);
+		WheelComponent->SetWheelSlipGraphMultiplier(1, 1);
+		WheelComponent->SetWheelSlipGraphMultiplier(2, 2);
+		WheelComponent->SetWheelSlipGraphMultiplier(3, 2);*/
 	}
 }
 
@@ -177,12 +191,17 @@ void AVehiclePlayer::EnhancedReset() {
 
 void AVehiclePlayer::EnhancedBooster() {
 
-	/*direction = GetActorForwardVector();
+	direction = GetActorForwardVector();
 	direction.Normalize();
-	OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
+	// OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
+	OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+	/*UE_LOG(LogTemp, Warning, TEXT("%s"), *OriginVelocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("%f"), GetVehicleMovementComponent()->GetForwardSpeed());*/
 	FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
-	GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity);
-	OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();*/
+	GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity, true);
+	// OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+
+
 
 	RightThruster->SetAutoActivate(true);
 	LeftThruster->SetAutoActivate(true);
@@ -192,10 +211,12 @@ void AVehiclePlayer::EnhancedBooster() {
 
 
 
-//void AVehiclePlayer::EnhancedBoosterCompleted() {
-//
-//	 RightThruster->SetAutoActivate(false);
-//	 LeftThruster->SetAutoActivate(false);
-//	RightBoosterLight->ToggleVisibility(false);
-//	LeftBoosterLight->ToggleVisibility(false);
-//}
+void AVehiclePlayer::EnhancedBoosterCompleted() {
+
+	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
+
+	RightThruster->SetAutoActivate(false);
+	LeftThruster->SetAutoActivate(false);
+	RightBoosterLight->ToggleVisibility(false);
+	LeftBoosterLight->ToggleVisibility(false);
+}
