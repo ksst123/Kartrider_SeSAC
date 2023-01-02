@@ -103,12 +103,12 @@ private:
 
 	void EnhancedReset();
 
-	void EnhancedBooster();
-	void EnhancedBoosterCompleted();
+	// void EnhancedBooster();
+	// void EnhancedBoosterCompleted();
 
 
 	FVector direction;
 	float BoosterMultiplier = 0.05f;
-	float DriftForce;
+	float DriftForce = 100.0f;
 	float OriginVelocity;
 };
