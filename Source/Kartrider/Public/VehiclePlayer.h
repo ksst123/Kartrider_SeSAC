@@ -76,16 +76,13 @@ public:
 	USceneCaptureComponent2D* SceneCaptureCameraComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
-	UPhysicsThrusterComponent* RightThruster;
+	class UParticleSystemComponent* TurboEffectLeft;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
-	UPhysicsThrusterComponent* LeftThruster;
+	class UParticleSystemComponent* TurboEffectRight;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
-	UPointLightComponent* RightBoosterLight;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Booster Settings")
-	UPointLightComponent* LeftBoosterLight;
+	UPROPERTY(EditDefaultsOnly, Category = "Booster Settings")
+	bool IsBoost;
 
 private:
 	/*UPROPERTY(EditAnywhere, Category="Vehicle Player")
@@ -103,12 +100,13 @@ private:
 
 	void EnhancedReset();
 
-	// void EnhancedBooster();
-	// void EnhancedBoosterCompleted();
+	void EnhancedBooster();
+	void EnhancedBoosterCompleted();
 
 
 	FVector direction;
-	float BoosterMultiplier = 0.05f;
+	float BoostValue = 100.0f;
+	float BoostMultiplier = 0.04f;
 	float DriftForce = 100.0f;
 	float OriginVelocity;
 };

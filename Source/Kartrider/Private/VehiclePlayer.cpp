@@ -7,6 +7,7 @@
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/PlayerController.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 
@@ -36,27 +37,13 @@ AVehiclePlayer::AVehiclePlayer()
 	SceneCaptureCameraComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureCameraComponent"));
 	SceneCaptureCameraComponent->SetupAttachment(SceneCaptureSpringArmComponent);
 
-	// 부스터를 위한 오른쪽 Thruster 생성 후 루트 컴포넌트에 붙인다.
-	RightThruster = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("RightBoosterThruster"));
-	RightThruster->SetupAttachment(RootComponent);
-	RightThruster->SetAutoActivate(false);
+	// 부스터 효과를 위한 파티클 생성 후 루트 컴포넌트에 붙인다.
+	TurboEffectLeft = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Left Booster Effect"));
+	TurboEffectRight = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Right Booster Effect"));
+	TurboEffectLeft->SetupAttachment(RootComponent);
+	TurboEffectRight->SetupAttachment(RootComponent);
 
-	// 부스터를 위한 왼쪽 Thruster 생성 후 루트 컴포넌트에 붙인다.
-	LeftThruster = CreateDefaultSubobject<UPhysicsThrusterComponent>(TEXT("LeftBoosterThruster"));
-	LeftThruster->SetupAttachment(RootComponent);
-	LeftThruster->SetAutoActivate(false);
 
-	// 부스터 효과를 위한 오른쪽 Point Light 생성 후 오른쪽 Thruster에 붙인다.
-	RightBoosterLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("RightBoosterLight"));
-	RightBoosterLight->SetupAttachment(RightThruster);
-	RightBoosterLight->ToggleVisibility(false);
-	RightBoosterLight->SetCastShadows(false);
-
-	// 부스터 효과를 위한 왼쪽 Point Light 생성 후 왼쪽 Thruster에 붙인다.
-	LeftBoosterLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("LeftBoosterLight"));
-	LeftBoosterLight->SetupAttachment(LeftThruster);
-	LeftBoosterLight->ToggleVisibility(false);
-	LeftBoosterLight->SetCastShadows(false);
 
 	// ThrottleAction->
 
@@ -119,8 +106,8 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Input->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedReset);
 	
 	// 부스터 액션 바인딩
-	// Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
-	// Input->BindAction(BoosterAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBoosterCompleted);
+	Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
+	Input->BindAction(BoosterAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBoosterCompleted);
 
 }
 
@@ -197,34 +184,49 @@ void AVehiclePlayer::EnhancedReset() {
 
 }
 
-//void AVehiclePlayer::EnhancedBooster() {
-//
-//	//direction = GetActorForwardVector();
-//	//direction.Normalize();
-//	//// OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
-//	//OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
-//	///*UE_LOG(LogTemp, Warning, TEXT("%s"), *OriginVelocity.ToString());
-//	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVehicleMovementComponent()->GetForwardSpeed());*/
-//	//FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
-//	//GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity, true);
-//	//// OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
-//
-//
-//
-//	//RightThruster->SetAutoActivate(true);
-//	//LeftThruster->SetAutoActivate(true);
-//	//RightBoosterLight->ToggleVisibility(true);
-//	//LeftBoosterLight->ToggleVisibility(true);
-//}
+void AVehiclePlayer::EnhancedBooster() {
+
+	//direction = GetActorForwardVector();
+	//direction.Normalize();
+	//// OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
+	//OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+	///*UE_LOG(LogTemp, Warning, TEXT("%s"), *OriginVelocity.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVehicleMovementComponent()->GetForwardSpeed());*/
+	//FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
+	//GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity, true);
+	//// OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+
+	//RightThruster->SetAutoActivate(true);
+	//LeftThruster->SetAutoActivate(true);
+	//RightBoosterLight->ToggleVisibility(true);
+	//LeftBoosterLight->ToggleVisibility(true);
+
+	// Turbo 파티클 활성화
+	IsBoost = true;
+	TurboEffectLeft->ToggleVisibility(true);
+	TurboEffectRight->ToggleVisibility(true);
+
+	// Booster Physics 적용
+	direction = GetActorForwardVector();
+	direction.Normalize();
+	float CurrentSpeed = GetVehicleMovementComponent()->GetForwardSpeed();
+	FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
+	GetMesh()->SetPhysicsLinearVelocity(BoostVelocity, true);
+}
 
 
 
-//void AVehiclePlayer::EnhancedBoosterCompleted() {
-//
-//	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
-//
-//	/*RightThruster->SetAutoActivate(false);
-//	LeftThruster->SetAutoActivate(false);
-//	RightBoosterLight->ToggleVisibility(false);
-//	LeftBoosterLight->ToggleVisibility(false);*/
-//}
+void AVehiclePlayer::EnhancedBoosterCompleted() {
+
+	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
+
+	/*RightThruster->SetAutoActivate(false);
+	LeftThruster->SetAutoActivate(false);
+	RightBoosterLight->ToggleVisibility(false);
+	LeftBoosterLight->ToggleVisibility(false);*/
+
+	// Turbo 파티클 비활성화
+	IsBoost = false;
+	TurboEffectLeft->ToggleVisibility(false);
+	TurboEffectRight->ToggleVisibility(false);
+}
