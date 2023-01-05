@@ -76,6 +76,7 @@ void AVehiclePlayer::BeginPlay() {
 void AVehiclePlayer::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	MyDeltaTime = DeltaTime;
 }
 
 void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -184,7 +185,7 @@ void AVehiclePlayer::EnhancedReset() {
 
 }
 
-void AVehiclePlayer::EnhancedBooster() {
+void AVehiclePlayer::EnhancedBooster(const FInputActionValue& Value) {
 
 	//direction = GetActorForwardVector();
 	//direction.Normalize();
@@ -205,18 +206,26 @@ void AVehiclePlayer::EnhancedBooster() {
 	IsBoost = true;
 	TurboEffectLeft->ToggleVisibility(true);
 	TurboEffectRight->ToggleVisibility(true);
+	
+	float BoostDuration = Value.GetMagnitude() * 5.0f;
 
-	// Booster Physics 적용
-	direction = GetActorForwardVector();
-	direction.Normalize();
-	float CurrentSpeed = GetVehicleMovementComponent()->GetForwardSpeed();
-	FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
-	GetMesh()->SetPhysicsLinearVelocity(BoostVelocity, true);
+	while (BoostValue >= 0.0f)
+	{
+		// Booster Physics 적용
+		direction = GetActorForwardVector();
+		direction.Normalize();
+		float CurrentSpeed = GetVehicleMovementComponent()->GetForwardSpeed();
+		FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
+		GetMesh()->SetPhysicsLinearVelocity(BoostVelocity * 0.3, true);
+
+		BoostValue -= BoostDuration * MyDeltaTime * 3;
+		UE_LOG(LogTemp, Warning, TEXT("%f"), BoostValue);
+	}
 }
 
 
 
-void AVehiclePlayer::EnhancedBoosterCompleted() {
+void AVehiclePlayer::EnhancedBoosterCompleted(const FInputActionValue& Value) {
 
 	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
 
