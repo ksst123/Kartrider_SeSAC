@@ -218,7 +218,7 @@ void AVehiclePlayer::EnhancedBooster(const FInputActionValue& Value) {
 		FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
 		GetMesh()->SetPhysicsLinearVelocity(BoostVelocity * 0.3, true);
 
-		BoostValue -= BoostDuration * MyDeltaTime * 3;
+		BoostValue -= BoostDuration * MyDeltaTime;
 		UE_LOG(LogTemp, Warning, TEXT("%f"), BoostValue);
 	}
 }
