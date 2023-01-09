@@ -100,8 +100,8 @@ private:
 
 	void EnhancedReset();
 
-	void EnhancedBooster(const FInputActionValue& Value);
-	void EnhancedBoosterCompleted(const FInputActionValue& Value);
+	// void EnhancedBooster(const FInputActionValue& Value);
+	// void EnhancedBoosterCompleted(const FInputActionValue& Value);
 
 
 	FVector direction;
@@ -109,5 +109,4 @@ private:
 	float BoostMultiplier = 0.04f;
 	float DriftForce = 100.0f;
 	float OriginVelocity;
-	float MyDeltaTime;
 };

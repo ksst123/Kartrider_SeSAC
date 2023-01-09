@@ -8,9 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-
-
-
+#include "Misc/App.h"
 
 
 
@@ -75,8 +73,6 @@ void AVehiclePlayer::BeginPlay() {
 
 void AVehiclePlayer::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
-	MyDeltaTime = DeltaTime;
 }
 
 void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -107,8 +103,8 @@ void AVehiclePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Input->BindAction(ResetAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedReset);
 	
 	// 부스터 액션 바인딩
-	Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
-	Input->BindAction(BoosterAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBoosterCompleted);
+	// Input->BindAction(BoosterAction, ETriggerEvent::Triggered, this, &AVehiclePlayer::EnhancedBooster);
+	// Input->BindAction(BoosterAction, ETriggerEvent::Completed, this, &AVehiclePlayer::EnhancedBoosterCompleted);
 
 }
 
@@ -185,57 +181,55 @@ void AVehiclePlayer::EnhancedReset() {
 
 }
 
-void AVehiclePlayer::EnhancedBooster(const FInputActionValue& Value) {
-
-	//direction = GetActorForwardVector();
-	//direction.Normalize();
-	//// OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
-	//OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
-	///*UE_LOG(LogTemp, Warning, TEXT("%s"), *OriginVelocity.ToString());
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVehicleMovementComponent()->GetForwardSpeed());*/
-	//FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
-	//GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity, true);
-	//// OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
-
-	//RightThruster->SetAutoActivate(true);
-	//LeftThruster->SetAutoActivate(true);
-	//RightBoosterLight->ToggleVisibility(true);
-	//LeftBoosterLight->ToggleVisibility(true);
-
-	// Turbo 파티클 활성화
-	IsBoost = true;
-	TurboEffectLeft->ToggleVisibility(true);
-	TurboEffectRight->ToggleVisibility(true);
-	
-	float BoostDuration = Value.GetMagnitude() * 5.0f;
-
-	while (BoostValue >= 0.0f)
-	{
-		// Booster Physics 적용
-		direction = GetActorForwardVector();
-		direction.Normalize();
-		float CurrentSpeed = GetVehicleMovementComponent()->GetForwardSpeed();
-		FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
-		GetMesh()->SetPhysicsLinearVelocity(BoostVelocity * 0.3, true);
-
-		BoostValue -= BoostDuration * MyDeltaTime;
-		UE_LOG(LogTemp, Warning, TEXT("%f"), BoostValue);
-	}
-}
+//void AVehiclePlayer::EnhancedBooster(const FInputActionValue& Value) {
+//
+//	//direction = GetActorForwardVector();
+//	//direction.Normalize();
+//	//// OriginVelocity = GetMesh()->GetPhysicsLinearVelocity();
+//	//OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+//	///*UE_LOG(LogTemp, Warning, TEXT("%s"), *OriginVelocity.ToString());
+//	//UE_LOG(LogTemp, Warning, TEXT("%f"), GetVehicleMovementComponent()->GetForwardSpeed());*/
+//	//FVector BoosterVelocity = direction * BoosterMultiplier * OriginVelocity;
+//	//GetMesh()->SetPhysicsLinearVelocity(BoosterVelocity, true);
+//	//// OriginVelocity = GetVehicleMovementComponent()->GetForwardSpeed();
+//
+//	//RightThruster->SetAutoActivate(true);
+//	//LeftThruster->SetAutoActivate(true);
+//	//RightBoosterLight->ToggleVisibility(true);
+//	//LeftBoosterLight->ToggleVisibility(true);
+//
+//	// Turbo 파티클 활성화
+//	IsBoost = true;
+//	TurboEffectLeft->ToggleVisibility(true);
+//	TurboEffectRight->ToggleVisibility(true);
+//	
+//	// float BoostDuration = Value.GetMagnitude() * 5.0f;
+//	while (BoostValue >= 0.0f)
+//	{
+//		// Booster Physics 적용
+//		direction = GetActorForwardVector();
+//		direction.Normalize();
+//		float CurrentSpeed = GetVehicleMovementComponent()->GetForwardSpeed();
+//		FVector BoostVelocity = direction * CurrentSpeed * BoostMultiplier;
+//		GetMesh()->SetPhysicsLinearVelocity(BoostVelocity * 0.3, true);
+//
+//		BoostVelocity = BoostVelocity - GetWorld()->GetDeltaSeconds() * 100;
+//	}
+//}
 
 
 
-void AVehiclePlayer::EnhancedBoosterCompleted(const FInputActionValue& Value) {
-
-	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
-
-	/*RightThruster->SetAutoActivate(false);
-	LeftThruster->SetAutoActivate(false);
-	RightBoosterLight->ToggleVisibility(false);
-	LeftBoosterLight->ToggleVisibility(false);*/
-
-	// Turbo 파티클 비활성화
-	IsBoost = false;
-	TurboEffectLeft->ToggleVisibility(false);
-	TurboEffectRight->ToggleVisibility(false);
-}
+//void AVehiclePlayer::EnhancedBoosterCompleted(const FInputActionValue& Value) {
+//
+//	// GetMesh()->SetPhysicsLinearVelocity(OriginVelocity);
+//
+//	/*RightThruster->SetAutoActivate(false);
+//	LeftThruster->SetAutoActivate(false);
+//	RightBoosterLight->ToggleVisibility(false);
+//	LeftBoosterLight->ToggleVisibility(false);*/
+//
+//	// Turbo 파티클 비활성화
+//	IsBoost = false;
+//	TurboEffectLeft->ToggleVisibility(false);
+//	TurboEffectRight->ToggleVisibility(false);
+//}
